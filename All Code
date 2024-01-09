@@ -1,0 +1,35 @@
+import os
+import hashlib
+
+def scan_file(file_path):
+    try:
+        with open(file_path, 'rb') as file:
+            content = file.read()
+            md5_hash = hashlib.md5(content).hexdigest()
+            if is_malicious(md5_hash):
+                print(f"Potansiyel olarak kötü amaçlı bir dosya bulundu: {file_path}")
+            else:
+                print(f"Dosya temiz: {file_path}")
+    except IOError as e:
+        print(f"Hata oluştu: {e}")
+
+def is_malicious(md5_hash):
+    malicious_samples = ['hash1', 'hash2', 'hash3']  
+    return md5_hash in malicious_samples
+
+def scan_directory(directory):
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            scan_file(file_path)
+
+
+path = input("Lütfen dosya veya dizin yolunu girin: ")
+
+
+if os.path.isfile(path):
+    scan_file(path)
+elif os.path.isdir(path):
+    scan_directory(path)
+else:
+    print("Geçersiz dosya veya dizin yolunu girdiniz.")
